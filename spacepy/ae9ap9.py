@@ -541,7 +541,7 @@ def _parseInfo(header):
             if match:
                 # catch the old file version and let the user know
                 warnings.warn(
-                    "Outdated AE9AP9 data file encountered, please update the model, support will be removed post0.2.2",
+                    "Support for orbit files from AE9AP9 model <1.5 is deprecated; please update to model 1.5 or later.",
                     DeprecationWarning)
                 ans['propagator'] = match.group(1).strip()
     return ans
