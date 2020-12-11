@@ -1341,9 +1341,9 @@ def readJSONMetadata(fname, **kwargs):
     if hasattr(fname, 'read'):
         lines = fname.read()
     else:
-        # also possible in an exploration sense utilizing UnicodeDecodeError
         if fname.endswith('.gz'):
-            with gzip.GzipFile(filename=fname) as gzh:
+            kwargs = {} if str is bytes else {'mode': 'rt', 'encoding': 'latin-1'}
+            with gzip.open(filename=fname, **kwargs) as gzh:
                 lines = gzh.read()
         else:
             with open(fname, 'r') as f:
@@ -1351,10 +1351,7 @@ def readJSONMetadata(fname, **kwargs):
 
     # isolate header
     p_srch = re.compile(r"^#(.*)$", re.M)
-    try:  # from gzip binary, gzip
-        hreg = re.findall(p_srch, lines.decode('latin-1'))
-    except AttributeError:
-        hreg = re.findall(p_srch, lines)
+    hreg = re.findall(p_srch, lines)
     header = "".join(hreg)
 
     # isolate JSON field
@@ -1433,7 +1430,6 @@ def readJSONheadedASCII(fname, mdata=None, comment='#', convert=False, restrict=
             del mdata[val] #remove undesired keys
     mdata_copy = dmcopy(mdata)
     def innerloop(fh, mdata, mdata_copy):
-        # also possible in an exploration sense utilizing UnicodeDecodeError
         line = fh.readline()
         if not str is bytes:
             line = line.decode('latin1')
@@ -1485,7 +1481,7 @@ def readJSONheadedASCII(fname, mdata=None, comment='#', convert=False, restrict=
     for fn in fname:
         if not filelike:
             if fn.endswith('.gz'):
-                with gzip.GzipFile(filename=fn) as gzh:
+                with gzip.open(filename=fn) as gzh:
                     mdata = innerloop(gzh, mdata, mdata_copy)
             else:
                 with open(fn, 'rb') as fh: # fixes windows bug with seek()
