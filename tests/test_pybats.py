@@ -8,6 +8,7 @@ Copyright 2015 University of Michigan
 
 import matplotlib
 matplotlib.use('Agg')
+from matplotlib import dates
 
 import datetime as dt
 import glob
@@ -37,11 +38,14 @@ class TestParseFileTime(unittest.TestCase):
     files = ['mag_grid_e20130924-232600.out',
              'y=0_mhd_1_e20130924-220500-054.out',
              'y=0_mhd_2_t00001430_n00031073.out',
-             'z=0_mhd_2_t00050000_n00249620.out']
+             'z=0_mhd_2_t00050000_n00249620.out',
+             os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          'data', 'pybats_test', 'mag_grid_ascii.out'),
+    ]
     dates = [dt(2013,9,24,23,26,0), dt(2013,9,24,22, 5,0),
-             None, None]
-    times = [None, None, 870, 18000]
-    iters = [None, None, 31073, 249620]
+             None, None, None]
+    times = [None, None, 870, 18000, None]
+    iters = [None, None, 31073, 249620, None]
 
     def testParse(self):
         from spacepy.pybats import parse_filename_time
@@ -254,7 +258,7 @@ class TestMagGrid(unittest.TestCase):
     def testOpen(self):
         # Open both binary and ascii versions of same data.
         # Ensure expected values are loaded.
-        m1 = pbs.MagGridFile(os.path.join(self.pth, 'data/', 'pybats_test', 'mag_grid_ascii.out'),
+        m1 = pbs.MagGridFile(os.path.join(self.pth, 'data', 'pybats_test', 'mag_grid_ascii.out'),
                               format='ascii')
         m2 = pbs.MagGridFile(os.path.join(self.pth, 'data', 'pybats_test', 'mag_grid_binary.out'))
 
@@ -603,6 +607,14 @@ class RampyTests(unittest.TestCase):
         data.create_omniflux(check=False)
         testarr = np.array(data['omniH'][0].data)
         numpy.testing.assert_array_almost_equal(regrH, testarr)
+
+    def test_RamSat_orbit_formatter(self):
+        '''Test label variables are as expected'''
+        data = ram.RamSat(self.testfile)
+        tst_time = matplotlib.dates.date2num(dt.datetime(2012, 10, 29, 0, 2))
+        fmtstr = data._orbit_formatter(tst_time, None)
+        expected = '00:02 UT\n04:35 MLT\n-13.4$^{\circ}$ MLat\nR=5.05 $R_{E}$'
+        self.assertEqual(expected, fmtstr)
 
 if __name__=='__main__':
     unittest.main()

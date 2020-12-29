@@ -317,6 +317,7 @@ def _read_config(rcfile):
                 'psddata_url': 'http://spacepy.lanl.gov/repository/psd_dat.sqlite',
                 'support_notice': str(True),
                 'apply_plot_styles': str(True),
+                'enable_old_data_warning': str(True),
                 }
     #Functions to cast a config value; if not specified, value is a string
     str2bool = lambda x: x.lower() in ('1', 'yes', 'true', 'on')
@@ -325,6 +326,7 @@ def _read_config(rcfile):
               'ncpus': int,
               'support_notice': str2bool,
               'apply_plot_styles': str2bool,
+              'enable_old_data_warning': str2bool,
               }
     #SafeConfigParser deprecated in 3.2. And this is hideous, but...
     if hasattr(ConfigParser, 'SafeConfigParser'):
@@ -376,20 +378,14 @@ else:
         DOT_FLN = os.path.expanduser(os.path.join('~', '.spacepy'))
 rcfile = os.path.join(DOT_FLN, 'spacepy.rc')
 if not os.path.exists(DOT_FLN):
-    print("""SpacePy: Space Science Tools for Python
-  See __licence__ and __citation__ for licensing, and help() for HTML help.""")
     import shutil, sys
     datadir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                            'data')
     dataout = os.path.join(DOT_FLN, 'data')
     os.mkdir(DOT_FLN)
     os.mkdir(dataout)
-    shutil.copy(os.path.join(datadir, 'tai-utc.dat'), dataout)
-    print('Data and configuration installed to ' + DOT_FLN)
+    shutil.copy2(os.path.join(datadir, 'tai-utc.dat'), dataout)
     _read_config(rcfile)
-    print('Downloading OMNI database and leap seconds table is recommended:'
-          '\n\timport spacepy.toolbox; spacepy.toolbox.update()')
-    print('Thanks for using SpacePy!')
 else:
     _read_config(rcfile)
 

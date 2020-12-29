@@ -1,7 +1,12 @@
-Changes in Version 0.2.2 (2020-xx-xx)
+Changes in Version 0.2.3 (2021-xx-xx)
+=====================================
+
+Changes in Version 0.2.2 (2020-12-29)
 =====================================
 - Document end of support for Python 2
 - Quaternion math functions moved to coordinates module
+- Remove message on first import.
+- Fixed setup.py not finding f2py on some OSX installs
 coordinates
  - Include upstream fix for SPH->RLL coordinate transform
 datamodel
@@ -19,6 +24,8 @@ irbempy
 plot
  - utils.EventClicker support for non-line plots (e.g. pcolor)
  - New method for adding arrows to lines in utils
+ - spectrogram.spectrogram class renamed to Spectrogram to avoid collision
+   with its module.
 pycdf
  - VarCopy objects now carry information to help reproduce original
  - Newly-public method nelems to get number of elements in zVar
@@ -46,7 +53,9 @@ pybats
  - Bats2d.add_b_magsphere and add_stream_scatter now have kwargs for adding arrows on ray traces
  - Updates to ram.RamSat including omnidirectional flux calculation
  - ram.PressureFile fixed for Python 3.x failures
+ - Corrected MLT labels in ram.RamSat plotting
  - rim.Iono objects now load poorly-formatted files; rim.fix_format deprecated
+ - Fix reading of files with absolute paths on Windows.
 time
  - Fix handling of leapseconds before 1961.
  - For types that cannot represent leapseconds (e.g. UTC datetime), time
@@ -64,6 +73,7 @@ time
  - now and today return UTC times, not local.
  - matplotlib no longer required, including RDT and randomDate.
  - Add support for conversion to/from astropy.time.Time
+ - Warn about out-of-date leapseconds files (configurable option).
 toolbox
  - New function get_url to retrieve data from a URL
  - Change update to retrieve OMNI2 data from SPDF not ViRBO

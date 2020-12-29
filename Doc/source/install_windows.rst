@@ -4,8 +4,29 @@ Windows Installation
 
 The SpacePy team currently provides binary "wheels" via PyPI so it can
 be installed on Windows without a compiler. Binaries are provided for
-Python 2.7, 3.6, and 3.7 in 64-bit and 32-bit variants for each. ``pip
-install spacepy`` should find and install these binaries.
+Python 2.7 and 3.6 through 3.9 in 64-bit and 32-bit variants for each.
+``pip install spacepy`` should find and install these binaries.
+
+At this writing (2020-12-24), a Windows bug affects numpy. Version
+1.19.3 is known to work, so it is strongly recommended to install this
+version:
+
+  1. ``pip install numpy==1.19.3``
+  2. ``pip install spacepy``
+
+The bug is documented `here
+<https://developercommunity.visualstudio.com/content/problem/1207405/
+fmod-after-an-update-to-windows-2004-is-causing-a.html>`_. It
+will affect users for whom all of the following are true. In general,
+if you don't know, the answer is probably yes:
+
+  1. Running 64-bit Windows
+  2. Running the latest (2004) update of Windows 10.
+  3. *Not* taking specific action to compile numpy and its dependent
+     libraries in a way that works around this bug.
+
+32-bit Windows binaries will be discontinued with SpacePy 0.3, so
+installing 32-bit SpacePy will require :ref:`compiling <windows_compiling>`.
 
 Our recommended (but not required) Python distribution is `Anaconda
 <https://docs.anaconda.com/anaconda/>`_ running 64-bit
@@ -29,7 +50,7 @@ Fortran and ffnet
 `ffnet <http://ffnet.sourceforge.net/download.html>`_ is required for
 :mod:`~spacepy.LANLstar`. It can be installed either before or after
 SpacePy. Binary wheels are not provided, so a Fortran compiler is
-required
+required.
 
 With Anaconda, the compiler and ffnet can be installed with::
 
@@ -44,6 +65,8 @@ Some standalone binary installers (no ``pip`` support) are also
 available on the `ffnet site
 <http://ffnet.sourceforge.net/download.html>`_. These do not require a
 compiler but support only a limited set of Python versions.
+
+.. _windows_compiling:
 
 Compiling
 =========
@@ -62,7 +85,7 @@ by ``m2w64-gcc-fortran``.
 
 If you have difficulties, it may be useful to reference the `build
 scripts
-<https://github.com/spacepy/spacepy/tree/master/developer/scripts>`
+<https://github.com/spacepy/spacepy/tree/master/developer/scripts>`_
 the SpacePy developers use.
 
 .. _windows_CDF:
@@ -83,6 +106,11 @@ This is a simple self-extracting installer that can be installed either before o
 
 Standalone installers
 =====================
+
+Standalone installers for Windows will be discontinued starting with
+SpacePy 0.3. Binary wheels will still be provided and can be
+downloaded from the same location and installed with ``pip``,
+e.g. ``pip install spacepy-0.2.2-cp38-cp38-win_amd64.whl``.
 
 Self-extracting and self-installing executables are also available for
 download direct from `our github

@@ -13,10 +13,13 @@ contains more detail.
 0.2 Series
 ==========
 
-0.2.2 (2020-xx-xx)
+0.2.2 (2020-12-29)
 ------------------
 
-This will be the last release with full support for :doc:`Python 2 <py2k_eol>`.
+The 0.2 series will be the last with full support for :doc:`Python 2
+<py2k_eol>`; 0.2.3 will likely be the last release. Binary installers
+for :doc:`32-bit Windows <install_windows>` will also end after the 0.2
+series.
 
 New features
 ************
@@ -63,6 +66,10 @@ Quaternion math functions have been moved to
 :func:`~spacepy.toolbox.feq` is deprecated; numpy 1.7 added the equivalent
 :func:`~numpy.isclose`.
 
+The :class:`~spacepy.plot.spectrogram` class is now capitalized
+(:class:`~spacepy.plot.Spectrogram`); the old, lower-case variant is
+kept for compatibility but will be removed.
+
 Dependency requirements
 ***********************
 Not all dependencies are required for all functionality; see
@@ -99,7 +106,8 @@ Other changes
 Data sources for leapsecond files and :mod:`~spacepy.omni` Qin-Denton
 files have been updated to provide current sources. If present,
 entries in the :doc:`configuration file <configuration>` will still be
-used instead.
+used instead. A (configurable) warning is issued for out-of-date leapsecond
+files.
 
 The representation of leap second intervals in time systems which
 cannot directly represent them has been changed. Formerly times such

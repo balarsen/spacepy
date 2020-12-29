@@ -156,14 +156,16 @@ def default_f2py():
         if '.' in interp[6:]: #try slicing off suffix-of-suffix (e.g., exe)
             suffix = interp[6:-(interp[::-1].index('.') + 1)]
             suffixes.extend([suffix, '-' + suffix])
+        vers = "{0.major:01d}.{0.minor:01d}".format(sys.version_info)
+        suffixes.extend([vers, '-'+vers])
         candidates = ['f2py' + s for s in suffixes]
         for candidate in candidates:
             for c in [candidate, candidate + '.py']:
                 for d in os.environ['PATH'].split(os.pathsep):
                     if os.path.isfile(os.path.join(d, c)):
                         return c
-                    if os.path.isfile(os.path.join(interpdir, c)):
-                        return os.path.join(interpdir, c) #need full path
+                if os.path.isfile(os.path.join(interpdir, c)):
+                    return os.path.join(interpdir, c) #need full path
     if sys.platform == 'win32':
         return 'f2py.py'
     else:
@@ -568,7 +570,8 @@ class build(_build):
         if fcompiler == 'gnu':
             if bit == 64:
                 compflags = '-m64 ' + compflags
-        if fcompiler == 'gnu95' and not os.uname()[4].startswith('arm'):
+        if not sys.platform.startswith('win') and fcompiler == 'gnu95' \
+           and not os.uname()[4].startswith('arm'):
             # Raspberry Pi doesn't have this switch and assumes 32-bit
             compflags = '-m{0} '.format(bit) + compflags
         if fcompiler.startswith('intel'):
@@ -939,7 +942,7 @@ package_data = ['data/*.*', 'pybats/sample_data/*', 'data/LANLstar/*', 'data/TS0
 
 setup_kwargs = {
     'name': 'spacepy',
-    'version': '0.2.2',
+    'version': '0.2.3pre',
     'description': 'SpacePy: Tools for Space Science Applications',
     'long_description': 'SpacePy: Tools for Space Science Applications',
     'author': 'SpacePy team',
@@ -949,8 +952,8 @@ setup_kwargs = {
     'url': 'https://github.com/spacepy/spacepy',
 #download_url will override pypi, so leave it out http://stackoverflow.com/questions/17627343/why-is-my-package-not-pulling-download-url
 #    'download_url': 'https://sourceforge.net/projects/spacepy/files/spacepy/',
-    'requires': ['numpy (>=1.6)', 'scipy (>=0.10)', 'matplotlib (>=1.5)', 'python_dateutil',
-                 'h5py', 'python (>=2.7, !=3.0)'],
+    'requires': ['numpy (>=1.10, !=1.15.0)', 'scipy (>=0.11)', 'matplotlib (>=1.5)', 'python_dateutil',
+                 'h5py (>=2.6)', 'ffnet (>=0.7)', 'python (>=2.7, !=3.0)'],
     'packages': packages,
     'package_data': {'spacepy': package_data},
     'classifiers': [
@@ -991,9 +994,7 @@ if use_setuptools:
         'scipy>=0.11',
         'matplotlib>=1.5',
         'h5py>=2.6',
-        #Do not install ffnet on Windows since there's no binary
-        #(people must hand-install)
-        'ffnet>=0.7;platform_system!="Windows"',
+        'ffnet>=0.7',
         #ffnet needs networkx but not marked as requires, so to get it via pip
         #we need to ask for it ourselves
         'networkx>=1.0',
@@ -1004,6 +1005,11 @@ if use_setuptools:
     ]
 if 'bdist_wheel' in sys.argv:
     setup_kwargs['cmdclass']['bdist_wheel'] = bdist_wheel
+    # Don't require ffnet on binary wheels, since ffnet has no binary
+    # (users must hand-install). If user installs from source with pip,
+    # this will get ffnet the first time, but it will cache the wheel
+    # it builds from source, so subsequent installs won't reinstall ffnet!
+    setup_kwargs['install_requires'].remove('ffnet>=0.7')
 
 # run setup from distutil
 with warnings.catch_warnings(record=True) as warnlist:
