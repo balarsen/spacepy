@@ -1,5 +1,8 @@
 Changes in Version 0.2.3 (2021-xx-xx)
 =====================================
+documentation
+ - toolbox cleaned for numpydoc format and Raises sections added
+
 
 Changes in Version 0.2.2 (2020-12-29)
 =====================================
