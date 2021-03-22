@@ -1613,7 +1613,7 @@ def windowMean(data, time=[], winsize=0, overlap=0, st_time=None, op=np.mean):
             assert type(winsize) == datetime.timedelta
             assert type(overlap) == datetime.timedelta
         except AssertionError:
-            raise TypeError('windowmean error: winsize/overlap must be timedeltas')
+            raise TypeError('windowmean error: winsize/overlap must be timedeltas if a time array is supplied.')
         pts = False #force time-based averaging
         if (type(time[0]) != datetime.datetime):
             startpt = time[0]
@@ -2224,7 +2224,7 @@ def query_yes_no(question, default="yes"):
 
     Parameters
     ----------
-    question : string
+    question : str
         the question to ask
     default : string (optional)
 
