@@ -1113,8 +1113,8 @@ def get_url(url, outfile=None, reporthook=None, cached=False,
     This is similar to the deprecated ``urlretrieve``.
 
     .. versionchanged:: 0.2.3
-       In earlier versions of SpacePy invalid combinations of cached and outfile raised RuntimeError,
-       changed to ValueError.
+        In earlier versions of SpacePy invalid combinations of cached and
+        outfile raised RuntimeError, changed to ValueError.
 
     Parameters
     ----------
@@ -1133,7 +1133,8 @@ def get_url(url, outfile=None, reporthook=None, cached=False,
         Attempt to keep the connection open to retrieve more URLs.
         The return becomes a tuple of (data, conn) to return the
         connection used so it can be used again. This mode does not
-        support proxies. Required to be True if conn is provided. (Default False)
+        support proxies. Required to be True if conn is provided.
+        (Default False)
     conn : http.client.HTTPConnection (optional)
         An established http connection (HTTPS is also okay) to use with
         ``keepalive``. If not provided, will attempt to make a connection.
